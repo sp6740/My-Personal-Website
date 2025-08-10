@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mini Wordle</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f0f0f0;
+    }
+
+    a {
+        color: rgb(240, 175, 215);
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+
+    h1 {
+        color: #b81d5b;
+    }
+
+    /* Grid for Wordle board */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 50px);
+        gap: 5px;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .cell {
+        width: 50px;
+        height: 50px;
+        border: 2px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    /* Word colors */
+    .green { background-color: #6aaa64; color: white; }
+    .yellow { background-color: #c9b458; color: white; }
+    .gray { background-color: #787c7e; color: white; }
+
+    /* Input and button styles */
+    input {
+        padding: 10px;
+        font-size: 18px;
+        text-transform: uppercase;
+        width: 120px;
+        text-align: center;
+    }
+    button {
+        padding: 10px 15px;
+        font-size: 18px;
+        margin-left: 10px;
+        cursor: pointer;
+        background-color: #b81d5b;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+</style>
+</head>
+<body>
+    <a href="taylorswift.html">Back to Taylor Swift Page</a>
+
+    <h1>Wordle Clone</h1>
+    <div id="grid" class="grid"></div>
+
+    <input type="text" id="guessInput" maxlength="5" placeholder="Guess">
+    <button onclick="makeGuess()">Submit</button>
+
+<script>
+    const correctWord = "SWIFT"; // Change this to your word
+    const maxGuesses = 6;
+    let guesses = [];
+
+    function renderGrid() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+
+        guesses.forEach(guess => {
+            for (let i = 0; i < 5; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                const letter = guess[i] || '';
+                cell.textContent = letter;
+
+                if (letter) {
+                    if (letter === correctWord[i]) {
+                        cell.classList.add('green');
+                    } else if (correctWord.includes(letter)) {
+                        cell.classList.add('yellow');
+                    } else {
+                        cell.classList.add('gray');
+                    }
+                }
+                grid.appendChild(cell);
+            }
+        });
+
+        // Fill remaining rows
+        for (let i = guesses.length; i < maxGuesses; i++) {
+            for (let j = 0; j < 5; j++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.classList.add('cell');
+                grid.appendChild(emptyCell);
+            }
+        }
+    }
+
+    function makeGuess() {
+        const input = document.getElementById('guessInput');
+        const guess = input.value.toUpperCase();
+
+        if (guess.length !== 5) {
+            alert('Please enter exactly 5 letters.');
+            return;
+        }
+
+        guesses.push(guess);
+        input.value = '';
+        renderGrid();
+
+        if (guess === correctWord) {
+            setTimeout(() => alert('🎉 You guessed it!'), 100);
+        } else if (guesses.length >= maxGuesses) {
+            setTimeout(() => alert(`Game over! The word was ${correctWord}`), 100);
+        }
+    }
+
+    renderGrid();
+</script>
+
+</body>
+</html>
